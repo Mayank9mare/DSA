@@ -265,7 +265,7 @@ int main() {
  
     AVL tree;
  
-    int A[] = {10, 20, 30, 25, 28, 27, 5};
+    int A[] = {60, 90, 80, 50, 55, 51, 100,95};
     for (int i=0; i<sizeof(A)/sizeof(A[0]); i++){
         tree.root = tree.rInsert(tree.root, A[i]);
     }
@@ -274,7 +274,7 @@ int main() {
     cout << endl;
     print2D(tree.root,0);
  
-    tree.Delete(tree.root, 25);
+    tree.Delete(tree.root, 51);
     print2D(tree.root,0);
    
     tree.Inorder();

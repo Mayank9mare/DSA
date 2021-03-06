@@ -47,6 +47,7 @@
 #define vll vector<ll>
 #define mll map<ll,ll>
 #define mod 1000000007
+#define maxa 1000000000
 #define w(x) ll x; cin>>x; while(x--)
 #define ps(x,y) fixed<<setprecision(y)<<x;
 #define fo(i, j, k, in) for (ll i=j ; i<k ; i+=in)
@@ -285,6 +286,42 @@ void bfs01(Graph* graph,int start,int k){//when there are only 0,1 weights short
       }
   }
 }
+void dijisktra(Graph* graph,int s){
+    int distance[graph->V];
+    memset(distance,mod,sizeof(distance));
+    
+    //vector<int> dis(graph->V);
+    //int distance[graph->V];
+    int vis[graph->V]={0};
+    //memset(distance,mod,graph->V);
+    distance[s]=0;
+    priority_queue<pll,vector<pll>,greater<pll>> p;
+    p.push(mk(distance[s],s));
+    while(!p.empty()){
+        ll q=p.top().second;
+        p.pop();
+        if(vis[q]==1)continue;
+        vis[q]=1;
+
+        
+        for(int i=0;i<graph->adj[q].size();i++){
+            if(distance[graph->adj[q][i].second]>distance[q]+graph->adj[q][i].first){
+                distance[graph->adj[q][i].second]=distance[q]+graph->adj[q][i].first;
+                
+            }
+            p.push(mk(distance[graph->adj[q][i].second],graph->adj[q][i].second));
+        }
+    }
+    for(int i=1;i<graph->V;i++){
+        if(distance[i]==mod){
+            cout<<maxa<<" ";
+            continue;
+        }
+        cout<<distance[i]<<" ";
+    }
+    nl;
+    
+}
 
 
 
@@ -299,12 +336,12 @@ cin.tie(0);
     for(int i=0;i<E;i++){
         int src,des,weight=0;
         cin>>src>>des>>weight;
-        graph->edges[i].src=src;graph->edges[i].dest=des;graph->edges[i].weight=weight;//kruskal undirected
+        //graph->edges[i].src=src;graph->edges[i].dest=des;graph->edges[i].weight=weight;//kruskal undirected
         graph->addEdge(src-1,des-1,weight);
-        graph->addEdge(des-1,src-1,weight);//two for undirected graph sucker
+        //graph->addEdge(des-1,src-1,weight);//two for undirected graph sucker
 
     }
-    cout<<KrushukalMst(graph)<<endl;
+    dijisktra(graph,0);
     //cout<<prim(graph,1)<<endl;
     // graph->DFS(2);
     // graph->BFS(2);
