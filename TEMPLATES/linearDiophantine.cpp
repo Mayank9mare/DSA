@@ -70,43 +70,87 @@
 #define nl cout<<endl;
 
 using namespace std;
-//KnightMareVoid
-const int MAXN=1e5;
-int n,St[4*MAXN];
-void build(int a[],int v,int tl,int tr){
-    if(tl==tr){
-        St[v]=a[tl];
-    }
-    else{
-        int tm=(tl+tr)/2;
-        build(a,v*2,tl,tm);
-        build(a,v*2+1,tm+1,tr);
-        St[v]=St[2*v]+St[2*v+1];
-    }
-}
-int sum(int v,int tl,int tr,int l,int r){
-    if(l>r){
-        return 0;
-    }
-    if(l==tl&&r==tr){
-        return St[v];
-    }
-    int tm=(tl+tr)/2;
-    return sum(v*2,tl,tm,l,min(r,tm))+sum(v*2+1,tm+1,tr,max(tm+1,l),r);
-}
-void update(int v,int tl,int tr,int pos,int new_val){
-    if(tl==tr){
-        St[v]=new_val;
-    }
-    else{
-        int tm=(tl+tr)/2;
-        if(pos<=tm){
-            update(v*2,tl,tm,pos,new_val);
-        }
-        else{
-            update(v*2+1,tm+1,tr,pos,new_val);
-        }
-        St[v]=St[v*2]+St[v*2+1];
+//KnightMareVoidb
+int gcd(int a,int b,int &x,int &y){
+    if(b==0){
+        x=1;
+        y=0;
+        return a;
 
     }
+    int x1,y1;
+    int d=gcd(b,a%b,x1,y1);
+    x=y1;
+    y=x1-(y1*(a/b));
+    return d;
+
+}
+//ax+by=c
+bool find_anySol(int a,int b,int c,int &x0,int &y0,int &g){
+    g=gcd(abs(a),abs(b),x0,y0);
+    if(c%g){
+        return false;
+    }
+    x0*=(c/g);
+    y0*=(c/g);
+    if(a<0)x0=-x0;
+    if(b<0)y0=-y0;
+    return true;
+
+}
+void shift_sol(int &x,int &y,int a,int b,int cnt ){
+    x+=cnt*b;
+    y-=cnt*a;
+}
+int find_all_sols(int a,int b,int c,int minx,int maxx,int miny,int maxy){
+    int x,y,g;
+    if(!find_anySol(a,b,c,x,y,g))return 0;
+    a/=g;
+    b/=g;
+    int sign_a=a>0?1:-1;
+    int sign_b=b>0?1:-1;
+
+    shift_sol(x,y,a,b,(minx-x)/b);
+    if(x<minx){
+        shift_sol(x,y,a,b,sign_b);
+
+    }
+    if(x>maxx)return 0;
+    int lx1=x;
+    shift_sol(x,y,a,b,(maxx-x)/b);
+    if(x>maxx)shift_sol(x,y,a,b,-sign_b);
+    int rx1=x;
+
+    shift_sol(x,y,a,b,-(miny-y)/a);
+    if(y<miny)shift_sol(x,y,a,b,-sign_a);
+    if(y>maxy)return 0;
+    int lx2=x;
+    shift_sol(x,y,a,b,-(maxy-y)/a);
+    if(y>maxy){
+        shift_sol(x,y,a,b,sign_a);
+    }
+    int rx2=x;
+    if(lx2>rx2) swap(lx2,rx2);
+    int lx=max(lx1,lx2);
+    int rx=max(rx1,rx2);
+    if(lx>rx)return 0;
+    return (rx-lx)/(abs(b)) +1;
+}
+//Once we have lx and rx, it is also simple to enumerate through all the solutions.
+ //Just need to iterate through x=lx+k⋅b/g for all k≥0 until x=rx, and find the corresponding y values using the equation ax+by=c.
+
+
+int main()
+{
+ios_base::sync_with_stdio(0);
+cin.tie(0);
+    int t;
+    cin>>t;
+    while(t--){
+        
+
+    }
+
+
+    return 0;
 }

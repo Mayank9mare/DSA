@@ -71,42 +71,81 @@
 
 using namespace std;
 //KnightMareVoid
-const int MAXN=1e5;
-int n,St[4*MAXN];
-void build(int a[],int v,int tl,int tr){
-    if(tl==tr){
-        St[v]=a[tl];
-    }
-    else{
-        int tm=(tl+tr)/2;
-        build(a,v*2,tl,tm);
-        build(a,v*2+1,tm+1,tr);
-        St[v]=St[2*v]+St[2*v+1];
-    }
-}
-int sum(int v,int tl,int tr,int l,int r){
-    if(l>r){
-        return 0;
-    }
-    if(l==tl&&r==tr){
-        return St[v];
-    }
-    int tm=(tl+tr)/2;
-    return sum(v*2,tl,tm,l,min(r,tm))+sum(v*2+1,tm+1,tr,max(tm+1,l),r);
-}
-void update(int v,int tl,int tr,int pos,int new_val){
-    if(tl==tr){
-        St[v]=new_val;
-    }
-    else{
-        int tm=(tl+tr)/2;
-        if(pos<=tm){
-            update(v*2,tl,tm,pos,new_val);
-        }
-        else{
-            update(v*2+1,tm+1,tr,pos,new_val);
-        }
-        St[v]=St[v*2]+St[v*2+1];
+
+
+
+int main()
+{
+ios_base::sync_with_stdio(0);
+cin.tie(0);
+    int t;
+    cin>>t;
+    while(t--){
+        
 
     }
+
+
+    return 0;
+}
+
+int n;
+vector<vector<int>> adj;
+vector<bool> visited;
+vector<int> ans;
+void dfs(int v){
+    visited[v]=true;
+    for(int u:adj[v]){
+        if(!visited[u]){
+            dfs(u);
+        }
+    }
+    ans.pb(v);
+
+}
+void topological_sort(){
+    visited.assign(n,false);
+    ans.clear();
+    for(int i=0;i<n;i++){
+        if(!visited[i]){
+            dfs(i);
+        }
+    }
+    reverse(all(ans));
+}
+void t_sort(){
+    vector<int> in_deg(n,0);
+    for(int u=0;u<n;u++){
+        for(auto x:adj[u]){
+            in_deg[x]++;
+        }
+    }
+    queue<int> q;
+    for(int i=0;i<n;i++){
+        if(in_deg[i]==0){
+            q.push(i);
+        }
+    }
+    int cnt=0;
+    vector<int> top_order;
+    while(!q.empty()){
+        int u=q.front();
+        q.pop();
+        top_order.pb(u);
+        for(auto x:adj[u]){
+            if(--in_deg[x]==0){
+                q.push(x);
+            }
+        }
+        cnt++;
+    }
+    if(!cnt!=n){
+        cout<<"No topological order"<<endl;
+        return;
+    }
+    for(int i=0;i<top_order.size();i++){
+        cout<<top_order[i]<<" ";
+    }
+    cout<<endl;
+
 }
